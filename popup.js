@@ -29,7 +29,20 @@ function extractPrivacyPolicy() {
 }
 
 async function simplifyText(text) {
-  // Use OpenAI API or a dummy summarizer
-  // Replace with your OpenAI API call if needed
-  return "Summary: This is a placeholder simplified summary of the privacy policy.";
+  const response = await fetch("https://api.openai.com/v1/chat/completions", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      "Authorization": "Bearer YOUR_OPENAI_API_KEY"
+    },
+    body: JSON.stringify({
+      model: "gpt-3.5-turbo",
+      messages: [{ role: "user", content: `Summarize this privacy policy: ${text}` }],
+      temperature: 0.7
+    })
+  });
+
+  const data = await response.json();
+  return data.choices[0].message.content;
 }
+
